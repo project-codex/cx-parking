@@ -37,7 +37,7 @@ On line 426 change Garage to Location
     <div class="vehicle-garage"><span class="vehicle-detail">Location</span><span class="vehicle-answer">BMW M5</span></div>
 ````
 
-### qb-vehicles changes (To avoid people lockpicking parked vehicles (optional))
+### qb-vehiclekeys changes (To avoid people lockpicking parked vehicles (optional))
 
 Protection for parked vehicles so they can't get lockpicked
 Navigate to qb-vehiclekeys/client/main.lua
@@ -60,3 +60,5 @@ RegisterNetEvent('lockpicks:UseLockpick', function(isAdvanced)
     end)
 end)
 ````
+
+### Feel free to make pull requests if you have any improvements in mind!
