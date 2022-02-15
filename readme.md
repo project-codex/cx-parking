@@ -2,7 +2,9 @@
 
 ## This is a Real life-like parking system for the [qb-core](https://github.com/qbcore-framework/qb-core) framework.
 
-### THIS RESOURCE IS MEANT TO REPLACE QB-GARAGES
+### Join My [Discord](https://discord.gg/y8AjKeAUYX) For Support
+
+THIS RESOURCE IS MEANT TO REPLACE QB-GARAGES
 
 # Screenshots
 ![photo1](https://i.imgur.com/TduohMV.jpeg)
