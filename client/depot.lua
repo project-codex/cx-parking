@@ -98,13 +98,11 @@ local function menuDepot()
         }
     }
     exports['qb-menu']:openMenu(MenuDepotOptions)
-    headerDrawn = true
 end
 
 RegisterNetEvent('qb-garages:client:TakeOutDepotVehicle', function(data)
     local vehicle = data.value
     local key = data.key
-    headerDrawn = false
 
     if vehicle.state == "Impound" then
         TriggerServerEvent("qb-garage:server:PayDepotPrice", vehicle, key)
@@ -132,7 +130,6 @@ CreateThread(function()
                             Config.Depot[k].takeVehicle.z + 0.5, '~g~E~w~ - Garage')
                         if IsControlJustPressed(0, 38) then
                             menuDepot()
-                            headerDrawn = true
                         end
                     end
                 end
