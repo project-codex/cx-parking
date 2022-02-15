@@ -1,8 +1,8 @@
-## dk-parking
+# dk-parking
 
-This is a Real life-like parking system for the [qb-core](https://github.com/qbcore-framework/qb-core) framework.
+## This is a Real life-like parking system for the [qb-core](https://github.com/qbcore-framework/qb-core) framework.
 
-## THIS RESOURCE IS MEANT TO REPLACE QB-GARAGES
+### THIS RESOURCE IS MEANT TO REPLACE QB-GARAGES
 
 # Screenshots
 ![photo1](https://i.imgur.com/TduohMV.jpeg)
@@ -23,7 +23,7 @@ This is a Real life-like parking system for the [qb-core](https://github.com/qbc
 - Add ensure dk-parking in your server.cfg
 
 ## Extra steps to complete the transition
-# Phone changes
+### Phone changes
 Navigate to qb-phone/html/index.html
 On line 414 Change My Garage to My Vehicles
 On line 426 change Garage to Location
@@ -37,7 +37,7 @@ On line 426 change Garage to Location
     <div class="vehicle-garage"><span class="vehicle-detail">Location</span><span class="vehicle-answer">BMW M5</span></div>
 ````
 
-# qb-vehicles changes (To avoid people lockpicking parked vehicles (optional))
+### qb-vehicles changes (To avoid people lockpicking parked vehicles (optional))
 
 Protection for parked vehicles so they can't get lockpicked
 Navigate to qb-vehiclekeys/client/main.lua
