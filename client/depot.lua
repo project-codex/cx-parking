@@ -44,7 +44,7 @@ RegisterNetEvent('depot:client:takeOut', function(vehicle, key)
     local vehPlate = vehicle.plate
     local engine, body = vehicle.engine, vehicle.body
 
-    for k, v in pairs(Config.Depots) do
+    for k, v in pairs(Config.Depot) do
         coords = v.takeVehicle
     end
 
@@ -56,7 +56,7 @@ RegisterNetEvent('depot:client:takeOut', function(vehicle, key)
         TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
         QBCore.Functions.SetVehicleProperties(veh, json.decode(vehicle.mods))
         doCarDamage(veh, engine, body)
-        TriggerEvent(Config.VehicleKeyEvent, vehPlate)
+        TriggerEvent('vehiclekeys:client:SetOwner', vehPlate)
     end, coords, true)
     depotVehicles[key] = nil
 end)
@@ -120,17 +120,17 @@ CreateThread(function()
         local ped = PlayerPedId()
         local pos = GetEntityCoords(ped)
         local inGarageRange = false
-        for k, v in pairs(Config.Depots) do
-            local depottakeDist = #(pos - vector3(Config.Depots[k].takeVehicle.x, Config.Depots[k].takeVehicle.y, Config.Depots[k].takeVehicle.z))
+        for k, v in pairs(Config.Depot) do
+            local depottakeDist = #(pos - vector3(Config.Depot[k].takeVehicle.x, Config.Depot[k].takeVehicle.y, Config.Depot[k].takeVehicle.z))
             if depottakeDist <= 15 then
                 inGarageRange = true
-                DrawMarker(2, Config.Depots[k].takeVehicle.x, Config.Depots[k].takeVehicle.y,
-                    Config.Depots[k].takeVehicle.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 200, 0, 0, 222, false,
+                DrawMarker(2, Config.Depot[k].takeVehicle.x, Config.Depot[k].takeVehicle.y,
+                    Config.Depot[k].takeVehicle.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 200, 0, 0, 222, false,
                     false, false, true, false, false, false)
                 if depottakeDist <= 1.5 then
                     if not IsPedInAnyVehicle(ped) then
-                        DrawText3Ds(Config.Depots[k].takeVehicle.x, Config.Depots[k].takeVehicle.y,
-                            Config.Depots[k].takeVehicle.z + 0.5, '~g~E~w~ - Garage')
+                        DrawText3Ds(Config.Depot[k].takeVehicle.x, Config.Depot[k].takeVehicle.y,
+                            Config.Depot[k].takeVehicle.z + 0.5, '~g~E~w~ - Garage')
                         if IsControlJustPressed(0, 38) then
                             menuDepot()
                             headerDrawn = true
@@ -149,16 +149,16 @@ CreateThread(function()
 end)
 
 CreateThread(function()
-    for k, v in pairs(Config.Depots) do
+    for k, v in pairs(Config.Depot) do
         if v.showBlip then
-            local Depot = AddBlipForCoord(Config.Depots[k].takeVehicle.x, Config.Depots[k].takeVehicle.y, Config.Depots[k].takeVehicle.z)
+            local Depot = AddBlipForCoord(Config.Depot[k].takeVehicle.x, Config.Depot[k].takeVehicle.y, Config.Depot[k].takeVehicle.z)
             SetBlipSprite(Depot, 68)
             SetBlipDisplay(Depot, 4)
             SetBlipScale(Depot, 0.7)
             SetBlipAsShortRange(Depot, true)
             SetBlipColour(Depot, 5)
             BeginTextCommandSetBlipName("STRING")
-            AddTextComponentSubstringPlayerName(Config.Depots[k].label)
+            AddTextComponentSubstringPlayerName(Config.Depot[k].label)
             EndTextCommandSetBlipName(Depot)
         end
     end

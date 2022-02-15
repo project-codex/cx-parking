@@ -28,7 +28,7 @@ RegisterNetEvent('qb-garage:server:PayDepotPrice', function(vehicle, key)
                 Player.Functions.RemoveMoney("bank", result[1].depotprice, "paid-depot")
                 TriggerClientEvent("depot:client:takeOut", src, vehicle, key)
             else
-                TriggerClientEvent(Config.Notifications.event, locales.not_enough_money, Config.Notifications.types.bad)
+                TriggerClientEvent('QBCore:Notify', 'Not enough money!', 'error')
             end
         end
     end)

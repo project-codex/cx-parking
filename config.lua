@@ -8,16 +8,6 @@ Config.UseParkingLots = true -- Put this to true if you don't want to let people
 
 Config.UseQbMenu = true -- Set to true if you want qb-menu to show up when you drive in to a parking zone. ( Won't work of UseParkingLots is set to false )
 
-Config.VehicleKeyEvent = 'vehiclekeys:client:SetOwner' -- Don't touch if you're not using another vehiclekey system.
-
-Config.Notifications = { -- Don't modify if you don't know what you're doing. If you're having issues- Join my discord and create a ticket.
-    ['event'] = 'QBCore:Notify', -- The event notification
-    ['types'] = {
-        ['good'] = 'success', -- The good/green type
-        ['bad'] = 'error' -- The bad/red type
-    }
-}
-
 Config.ParkingMenu = { -- qb-menu header
     {
         header = 'Parking', -- Header title
@@ -85,15 +75,7 @@ Config.ParkingLots = { -- Create a ticket on discord if you're unsure how to do 
     }
 }
 
-
-Config.Phrases = { -- Notification Phrases.
-    ['you_are_not_in_parking_zone'] = 'You are not in a parking lot!',
-    ['not_enough_money'] = 'Not enough money!',
-    ['you_cant_park_this_vehicle'] = 'You can only park vehicles that you own!',
-    
-}
-
-Config.Depots = { -- You can only have 1 depot.
+Config.Depot = { -- You can only have 1 depot.
     ['Hayes Depot'] = {
         label = "Hayes Depot",
         takeVehicle = vector4(491.0, -1314.69, 29.25, 304.5),

@@ -73,7 +73,7 @@ RegisterNetEvent('dk-parking:client:park', function(state)
                 return
             end
         else
-            TriggerEvent(Config.Notifications.event, locales.you_cant_park_this_vehicle, Config.Notifications.types.bad)
+            QBCore.Functions.Notify('You can only park vehicles that you own!', 'error')
             isParking = false
             return
         end
@@ -83,7 +83,7 @@ RegisterNetEvent('dk-parking:client:park', function(state)
 
     if Config.UseParkingLots and state then
         if not combo:isPointInside(pedCoords) and state ~= 1 then
-            TriggerEvent(Config.Notifications.event, locales.you_are_not_in_parking_zone, Config.Notifications.types.bad)
+            QBCore.Functions.Notify('You are not in a parking area!', 'error')
             isParking = false
             return
         end
@@ -145,7 +145,7 @@ RegisterNetEvent('dk-parking:client:update', function(hash, model, props, plate,
         citizenid = QBCore.Functions.GetPlayerData().citizenid
     end
     if citizenid == vehcid then
-        TriggerEvent(Config.VehicleKeyEvent, plate)
+        TriggerEvent('vehiclekeys:client:SetOwner', plate)
     end
 end)
 
@@ -156,7 +156,7 @@ RegisterNetEvent('dk-parking:client:addkeys', function(model, plate, vehcid)
     end
 
     if citizenid == vehcid then
-        TriggerEvent(Config.VehicleKeyEvent, plate)
+        TriggerEvent('vehiclekeys:client:SetOwner', plate)
     end
 end)
 
