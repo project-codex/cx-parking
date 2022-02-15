@@ -11,7 +11,7 @@ THIS RESOURCE IS MEANT TO REPLACE QB-GARAGES
 ![photo2](https://i.imgur.com/tYpzO8t.jpeg)
 
 
-# Dependencies
+## Dependencies
 - [oxmysql](https://github.com/overextended/oxmysql/releases/tag/v1.9.3)
 - [qb-core](https://github.com/qbcore-framework/qb-core)
 - [qb-vehiclekeys](https://github.com/qbcore-framework/qb-vehiclekeys)
@@ -27,7 +27,9 @@ THIS RESOURCE IS MEANT TO REPLACE QB-GARAGES
 ## Extra steps to complete the transition
 ### Phone changes
 Navigate to qb-phone/html/index.html
+
 On line 414 Change My Garage to My Vehicles
+
 On line 426 change Garage to Location
 ````html
     <div class="garage-app-header">
@@ -42,7 +44,9 @@ On line 426 change Garage to Location
 ### qb-vehiclekeys changes (To avoid people lockpicking parked vehicles (optional))
 
 Protection for parked vehicles so they can't get lockpicked
+
 Navigate to qb-vehiclekeys/client/main.lua
+
 On line 301 replace the event 'lockpicks:UseLockpick' with this:
 
 ````lua
