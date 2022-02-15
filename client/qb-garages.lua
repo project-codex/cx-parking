@@ -13,29 +13,6 @@ local DrawText3Ds = function(x, y, z, text)
     ClearDrawOrigin()
 end
 
-local function MenuDepot()
-    exports['qb-menu']:openMenu({
-        {
-            header = "Impound",
-            isMenuHeader = true
-        },
-        {
-            header = "My Vehicles",
-            txt = "View your impounded vehicles!",
-            params = {
-                event = "qb-garages:client:DepotList"
-            }
-        },
-        {
-            header = "⬅ Leave Depot",
-            txt = "",
-            params = {
-                event = "qb-menu:closeMenu"
-            }
-        },
-    })
-end
-
 function round(number, decimals)
     local scale = 10 ^ decimals
     local c = 2 ^ 52 + 2 ^ 51
