@@ -97,7 +97,6 @@ local function menuDepot()
             event = "qb-menu:closeMenu"
         }
     }
-
     exports['qb-menu']:openMenu(MenuDepotOptions)
     headerDrawn = true
 end
