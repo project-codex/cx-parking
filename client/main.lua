@@ -1,10 +1,10 @@
 QBCore = exports['qb-core']:GetCoreObject()
 local citizenid = 0
-PlayerData = {}
+local PlayerData = {}
 local isParking = false
 local zones = {}
-locales = Config.Phrases
 local headerDrawn = false
+local vehicleEntities = {}
 
 -- Functions
 
@@ -22,6 +22,14 @@ local DrawText3Ds = function(x, y, z, text)
     DrawRect(0.0, 0.0 + 0.0125, 0.017 + factor, 0.03, 0, 0, 0, 75)
     ClearDrawOrigin()
 end
+
+local function table_invert(t)
+    local s={}
+    for k,v in pairs(t) do
+      s[v]=k
+    end
+    return s
+ end
 
 function round(number, decimals)
     local scale = 10 ^ decimals
@@ -112,6 +120,7 @@ local function spawnVehicle(model, coords, plate, props, engine, body)
         SetEntityAsMissionEntity(veh, true, true)
         QBCore.Functions.SetVehicleProperties(veh, json.decode(props))
         doCarDamage(veh, engine, body)
+        vehicleEntities[#vehicleEntities + 1] = veh
     end, coords, true)
     return vehicle
 end
@@ -187,6 +196,14 @@ RegisterNetEvent('dk-parking:client:unpark', function(veh, body, engine)
     SetEntityCanBeDamaged(veh, false)
     SetEntityInvincible(veh, false)
     FreezeEntityPosition(veh, false)
+
+    local keys = table_invert(vehicleEntities)
+
+    for k, v in pairs(keys) do
+        if k == veh then
+            vehicleEntities[v] = nil
+        end
+    end
 end)
 
 RegisterNetEvent('dk-parking:client:onjoin', function(result)
@@ -233,6 +250,19 @@ RegisterNetEvent('dk-parking:client:addkeys', function(model, plate, vehcid)
 
     if citizenid == vehcid then
         TriggerEvent('vehiclekeys:client:SetOwner', plate)
+    end
+end)
+
+CreateThread(function()
+    while true do
+        for k, v in pairs(vehicleEntities) do
+            if DoesEntityExist(v) then
+                if not IsVehicleOnAllWheels(v) then
+                    SetVehicleOnGroundProperly(v)
+                end
+            end
+        end
+        Wait(5000)
     end
 end)
 

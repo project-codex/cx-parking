@@ -24,7 +24,7 @@ local function closeMenuFull()
 end
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    PlayerData = QBCore.Functions.GetPlayerData()
+    local PlayerData = QBCore.Functions.GetPlayerData()
     cid = PlayerData.citizenid
 
     QBCore.Functions.TriggerCallback('depot:server:getDepotVehicles', function(vehicles)
@@ -64,7 +64,6 @@ end)
 local function menuDepot()
     local MenuDepotOptions = {{
         header = "Depot",
-        isMenuHeader = true
     }}
     for k, v in pairs(depotVehicles) do
 
