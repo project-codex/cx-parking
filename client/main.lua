@@ -225,10 +225,6 @@ RegisterNetEvent('dk-parking:client:update', function(hash, model, props, plate,
         DeleteEntity(hash)
     end
 
-    print('updating')
-
-    print(model, carcoords, plate, props, engine, body)
-
     local veh = spawnVehicle(model, carcoords, plate, props, engine, body)
     Wait(1000)
     if citizenid == 0 or citizenid == nil then

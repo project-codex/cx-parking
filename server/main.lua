@@ -75,9 +75,7 @@ AddEventHandler('dk-parking:server:update', function(hash, plate)
 
     if coords ~= nil then
         TriggerClientEvent('dk-parking:client:update', src, hash, model, mods, plate, coords, engine, body, citizenid, false)
-        print('coords not nil')
     else
-        print('coords nil')
         TriggerEvent('dk-parking:server:update', hash, plate)
     end
 end)
@@ -87,7 +85,7 @@ AddEventHandler('dk-parking:server:unpark', function(hash, plate)
     local src = source
     local bodydamage = MySQL.Sync.fetchAll('SELECT body FROM player_vehicles WHERE plate = ?', {plate})
     local enginedamage = MySQL.Sync.fetchAll('SELECT engine FROM player_vehicles WHERE plate = ?', {plate})
-    
+
     for k, v in pairs(bodydamage) do
         bodydamage = v.bodydamage
     end
