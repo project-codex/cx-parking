@@ -67,10 +67,11 @@ local function menuDepot()
     }}
     for k, v in pairs(depotVehicles) do
 
-        enginePercent = round(v.engine / 10, 0)
-        bodyPercent = round(v.body / 10, 0)
-        currentFuel = v.fuel
-        vname = QBCore.Shared.Vehicles[v.vehicle].name
+        local enginePercent = round(v.engine / 10, 0)
+        local bodyPercent = round(v.body / 10, 0)
+        local currentFuel = v.fuel
+        local vname = QBCore.Shared.Vehicles[v.vehicle].name
+        
         if v.state == 0 then
             v.state = "Impound"
         end

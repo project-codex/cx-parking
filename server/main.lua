@@ -11,14 +11,6 @@ local function getPlayers()
     return TotalPlayers
 end
 
-local function table_invert(t)
-    local s={}
-    for k,v in pairs(t) do
-      s[v]=k
-    end
-    return s
- end
-
 local function round(number, decimals)
     local scale = 10 ^ decimals
     local c = 2 ^ 52 + 2 ^ 51
@@ -37,10 +29,10 @@ AddEventHandler('dk-parking:server:checkstate', function(plate)
     local plate = plate
     local state = MySQL.Sync.fetchScalar('SELECT state FROM player_vehicles WHERE plate = ? LIMIT 1', {plate});
 
+    local id = 2
+
     if state == 1 then
         id = 1
-    else
-        id = 2
     end
 
     TriggerClientEvent('dk-parking:client:park', src, id)
@@ -83,6 +75,10 @@ AddEventHandler('dk-parking:server:update', function(hash, plate)
 
     if coords ~= nil then
         TriggerClientEvent('dk-parking:client:update', src, hash, model, mods, plate, coords, engine, body, citizenid, false)
+        print('coords not nil')
+    else
+        print('coords nil')
+        TriggerEvent('dk-parking:server:update', hash, plate)
     end
 end)
 
@@ -91,7 +87,7 @@ AddEventHandler('dk-parking:server:unpark', function(hash, plate)
     local src = source
     local bodydamage = MySQL.Sync.fetchAll('SELECT body FROM player_vehicles WHERE plate = ?', {plate})
     local enginedamage = MySQL.Sync.fetchAll('SELECT engine FROM player_vehicles WHERE plate = ?', {plate})
-
+    
     for k, v in pairs(bodydamage) do
         bodydamage = v.bodydamage
     end
@@ -103,11 +99,9 @@ AddEventHandler('dk-parking:server:unpark', function(hash, plate)
     MySQL.Async.execute('UPDATE player_vehicles SET state = ?, street = ? WHERE plate = ?', {state, 'Unknown', plate})
     TriggerClientEvent('dk-parking:client:unpark', src, hash, bodydamage, enginedamage)
 
-    local key = table_invert(parkedVehicles)
-
-    for k, v in pairs(key) do
-        if k == plate then
-            parkedVehicles[v] = nil
+    for k, v in pairs(parkedVehicles) do
+        if v == plate then
+            parkedVehicles[k] = nil
         end
     end
 end)

@@ -1,6 +1,5 @@
 QBCore = exports['qb-core']:GetCoreObject()
 local citizenid = 0
-local PlayerData = {}
 local isParking = false
 local zones = {}
 local headerDrawn = false
@@ -22,14 +21,6 @@ local DrawText3Ds = function(x, y, z, text)
     DrawRect(0.0, 0.0 + 0.0125, 0.017 + factor, 0.03, 0, 0, 0, 75)
     ClearDrawOrigin()
 end
-
-local function table_invert(t)
-    local s={}
-    for k,v in pairs(t) do
-      s[v]=k
-    end
-    return s
- end
 
 function round(number, decimals)
     local scale = 10 ^ decimals
@@ -91,17 +82,12 @@ function doCarDamage(currentVehicle, engine, body)
     end
 end
 
-
-local function saveVehicle(veh, coords, plate, body, engine, carheading)
-
-    local s1, s2 = GetStreetNameAtCoord(coords.x, coords.y, coords.z)
+local function getStreet(coords)
+    local s1 = GetStreetNameAtCoord(coords.x, coords.y, coords.z)
     local street1 = GetStreetNameFromHashKey(s1)
-    local street2 = GetStreetNameFromHashKey(s2)
     local street = street1
 
-    local myCar = QBCore.Functions.GetVehicleProperties(veh)
-
-    TriggerServerEvent('dk-parking:server:saveveh', myCar, plate, coords, body, engine, carheading, street)
+    return street
 end
 
 local function spawnVehicle(model, coords, plate, props, engine, body)
@@ -129,7 +115,7 @@ end
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     local id = GetPlayerServerId(PlayerId())
-    PlayerData = QBCore.Functions.GetPlayerData()
+    local PlayerData = QBCore.Functions.GetPlayerData()
     citizenid = PlayerData.citizenid
     TriggerServerEvent('dk-parking:server:onjoin', id, citizenid)
 end)
@@ -148,6 +134,12 @@ RegisterNetEvent('dk-parking:client:park', function(state)
     if isParking or not IsPedInAnyVehicle(ped) then
         return
     end
+
+    if GetEntitySpeed(ped) > 1 then
+        QBCore.Functions.Notify('Slow down before parking.')
+        return
+    end
+
     isParking = true
 
     QBCore.Functions.TriggerCallback('qb-garage:server:checkVehicleOwner', function(owned)
@@ -177,10 +169,13 @@ RegisterNetEvent('dk-parking:client:park', function(state)
     local vehCoords, vehHeading = GetEntityCoords(pedVeh), GetEntityHeading(pedVeh)
 
     if state == 2 then
-        local body = GetVehicleBodyHealth(GetVehiclePedIsIn(PlayerPedId()))
-        local engine = GetVehicleEngineHealth(GetVehiclePedIsIn(PlayerPedId()))
-        saveVehicle(pedVeh, vehCoords, vehPlate, body, engine, vehHeading)
+        local vehBody = GetVehicleBodyHealth(GetVehiclePedIsIn(ped))
+        local vehEngine = GetVehicleEngineHealth(GetVehiclePedIsIn(ped))
+        local vehMods = QBCore.Functions.GetVehicleProperties(pedVeh)
+        local vehStreet = getStreet(vehCoords)
         TaskLeaveVehicle(ped, pedVeh, 0)
+
+        TriggerServerEvent('dk-parking:server:saveveh', vehMods, vehPlate, vehCoords, vehBody, vehEngine, vehHeading, vehStreet)
         Wait(2500)
         TriggerServerEvent('dk-parking:server:update', pedVeh, vehPlate)
         isParking = false
@@ -197,11 +192,9 @@ RegisterNetEvent('dk-parking:client:unpark', function(veh, body, engine)
     SetEntityInvincible(veh, false)
     FreezeEntityPosition(veh, false)
 
-    local keys = table_invert(vehicleEntities)
-
-    for k, v in pairs(keys) do
-        if k == veh then
-            vehicleEntities[v] = nil
+    for k, v in pairs(vehicleEntities) do
+        if v == veh then
+            vehicleEntities[k] = nil
         end
     end
 end)
@@ -232,7 +225,11 @@ RegisterNetEvent('dk-parking:client:update', function(hash, model, props, plate,
         DeleteEntity(hash)
     end
 
-    local veh = spawnVehicle(model, carcoords, plate, props, engine, body, street)
+    print('updating')
+
+    print(model, carcoords, plate, props, engine, body)
+
+    local veh = spawnVehicle(model, carcoords, plate, props, engine, body)
     Wait(1000)
     if citizenid == 0 or citizenid == nil then
         citizenid = QBCore.Functions.GetPlayerData().citizenid
@@ -258,6 +255,7 @@ CreateThread(function()
         for k, v in pairs(vehicleEntities) do
             if DoesEntityExist(v) then
                 if not IsVehicleOnAllWheels(v) then
+                    print(v)
                     SetVehicleOnGroundProperly(v)
                 end
             end
