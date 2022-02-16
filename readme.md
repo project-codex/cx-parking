@@ -47,24 +47,33 @@ Protection for parked vehicles so they can't get lockpicked
 
 Navigate to qb-vehiclekeys/client/main.lua
 
-On line 301 replace the event 'lockpicks:UseLockpick' with this:
+On line 185 replace the function 'LockpickDoor' with this:
 
 ````lua
-RegisterNetEvent('lockpicks:UseLockpick', function(isAdvanced)
-    QBCore.Functions.TriggerCallback('parking:server:getParkedVehicles', function(vehicles)
-        local canLockpick = true
-        local closestVehicle = QBCore.Functions.GetClosestVehicle()
-        for k, v in pairs(vehicles) do
-            if GetVehicleNumberPlateText(closestVehicle) == v then
-                QBCore.Functions.Notify('This vehicle cant be lockpicked', 'error')
-                canLockpick = false
+local function LockpickDoor(isAdvanced)
+    local ped = PlayerPedId()
+    local pos = GetEntityCoords(ped)
+    local vehicle = QBCore.Functions.GetClosestVehicle(pos)
+    if vehicle ~= nil and vehicle ~= 0 then
+        local vehpos = GetEntityCoords(vehicle)
+        if #(pos - vehpos) < 2.5 then
+            local vehLockStatus = GetVehicleDoorLockStatus(vehicle)
+            if (vehLockStatus > 0) then
+                QBCore.Functions.TriggerCallback('parking:server:getParkedVehicles', function(vehicles)
+                    for k, v in pairs(vehicles) do
+                        if GetVehicleNumberPlateText(vehicle) == v then
+                            QBCore.Functions.Notify('This vehicle cant be lockpicked', 'error')
+                        else
+                            usingAdvanced = isAdvanced
+                            TriggerEvent('qb-lockpick:client:openLockpick', lockpickFinish)
+                        end
+                    end
+                end)
             end
         end
-        if canLockpick then
-            LockpickDoor(isAdvanced)
-        end
-    end)
-end)
+    end
+end
+
 ````
 
 ### Feel free to make pull requests if you have any improvements in mind!
