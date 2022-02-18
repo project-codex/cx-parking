@@ -26,7 +26,7 @@ THIS RESOURCE IS MEANT TO REPLACE QB-GARAGES
 
 ## Extra steps to complete the transition
 ### Phone changes
-Navigate to qb-phone/html/index.html
+- Navigate to qb-phone/html/index.html
 
 On line 414 Change My Garage to My Vehicles
 
@@ -40,6 +40,14 @@ On line 426 change Garage to Location
 ````html
     <div class="vehicle-garage"><span class="vehicle-detail">Location</span><span class="vehicle-answer">BMW M5</span></div>
 ````
+
+- Navigate to qb-phone/fxmanifest.lua `shared_scripts`
+
+Delete/Comment out `'@qb-garages/config.lua'`
+
+- Navigate to qb-phone/server/main.lua
+
+On line 196 Delete/Comment out [this](https://i.imgur.com/qg4LVRU.png)
 
 ### qb-vehiclekeys changes (To avoid people lockpicking parked vehicles (optional))
 
