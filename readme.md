@@ -35,20 +35,18 @@ On line 426 change Garage to Location
     </div>
 ````
 
-````html
+```html
     <div class="vehicle-garage"><span class="vehicle-detail">Location</span><span class="vehicle-answer">BMW M5</span></div>
-````
-
-\
+```
 
 - Navigate to qb-phone/fxmanifest.lua `shared_scripts`
-Delete/Comment out `'@qb-garages/config.lua'`
 
-\
+    Delete/Comment out `'@qb-garages/config.lua'`
 
 - Navigate to qb-phone/server/main.lua
 
-On line 196 Delete/Comment out [this](https://i.imgur.com/qg4LVRU.png)
+On line 196 Delete/Comment out this:
+![garageresultimg](https://i.imgur.com/qg4LVRU.png)
 
 ### qb-vehiclekeys changes (To avoid people lockpicking parked vehicles (optional))
 
