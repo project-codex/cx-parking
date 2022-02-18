@@ -27,9 +27,7 @@ THIS RESOURCE IS MEANT TO REPLACE QB-GARAGES
 ## Extra steps to complete the transition
 ### Phone changes
 - Navigate to qb-phone/html/index.html
-
 On line 414 Change My Garage to My Vehicles
-
 On line 426 change Garage to Location
 ````html
     <div class="garage-app-header">
@@ -41,9 +39,12 @@ On line 426 change Garage to Location
     <div class="vehicle-garage"><span class="vehicle-detail">Location</span><span class="vehicle-answer">BMW M5</span></div>
 ````
 
-- Navigate to qb-phone/fxmanifest.lua `shared_scripts`
+\
 
+- Navigate to qb-phone/fxmanifest.lua `shared_scripts`
 Delete/Comment out `'@qb-garages/config.lua'`
+
+\
 
 - Navigate to qb-phone/server/main.lua
 
@@ -53,8 +54,7 @@ On line 196 Delete/Comment out [this](https://i.imgur.com/qg4LVRU.png)
 
 Protection for parked vehicles so they can't get lockpicked
 
-Navigate to qb-vehiclekeys/client/main.lua
-
+- Navigate to qb-vehiclekeys/client/main.lua
 On line 185 replace the function 'LockpickDoor' with this:
 
 ````lua
