@@ -136,7 +136,7 @@ QBCore.Functions.CreateCallback('parking:server:isVehicleParked', function(sourc
 end)
 
 AddEventHandler("onResourceStart", function(resourceName)
-	if ("dk-parking" == resourceName) then
+	if ("cx-parking" == resourceName) then
         Citizen.Wait(1000)
         local result = MySQL.Sync.fetchAll('SELECT * FROM player_vehicles WHERE state = ?', {1})
         for k, v in pairs(result) do
