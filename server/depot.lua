@@ -36,7 +36,7 @@ RegisterNetEvent('qb-garage:server:PayDepotPrice', function(vehicle, key)
 end)
 
 AddEventHandler("onResourceStart", function(resourceName)
-	if ("dk-parking" == resourceName) then
+	if ("cx-parking" == resourceName) then
         Citizen.Wait(1000)
         local result = exports.oxmysql:executeSync('SELECT * FROM player_vehicles WHERE NOT state = ?', {1})
         for k, v in pairs(result) do
