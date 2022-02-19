@@ -1,4 +1,4 @@
-# dk-parking
+# project-codex parking
 
 ## This is a Real life-like parking system for the [qb-core](https://github.com/qbcore-framework/qb-core) framework.
 
