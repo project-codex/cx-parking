@@ -250,8 +250,7 @@ CreateThread(function()
     while true do
         for k, v in pairs(vehicleEntities) do
             if DoesEntityExist(v) then
-                if not IsVehicleOnAllWheels(v) then
-                    print(v)
+                if GetVehicleWheelSuspensionCompression(v) == 0 then
                     SetVehicleOnGroundProperly(v)
                 end
             end
