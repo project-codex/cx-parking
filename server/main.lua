@@ -19,27 +19,26 @@ end
 
 RegisterCommand('park', function(source)
     local Player = QBCore.Functions.GetPlayer(source)
-    local plyName = Player.PlayerData.firstname
-    TriggerClientEvent('dk-parking:client:park', source)
+    TriggerClientEvent('parking:client:park', source)
 end, false)
 
-RegisterServerEvent('dk-parking:server:checkstate')
-AddEventHandler('dk-parking:server:checkstate', function(plate)
+RegisterServerEvent('parking:server:checkstate')
+AddEventHandler('parking:server:checkstate', function(plate)
     local src = source
     local plate = plate
     local state = MySQL.Sync.fetchScalar('SELECT state FROM player_vehicles WHERE plate = ? LIMIT 1', {plate});
-
+    
     local id = 2
 
     if state == 1 then
         id = 1
     end
 
-    TriggerClientEvent('dk-parking:client:park', src, id)
+    TriggerClientEvent('parking:client:park', src, id)
 end)
 
-RegisterServerEvent('dk-parking:server:saveveh')
-AddEventHandler('dk-parking:server:saveveh', function(myCar, plate, coords, body, engine, carheading, street)
+RegisterServerEvent('parking:server:saveveh')
+AddEventHandler('parking:server:saveveh', function(myCar, plate, coords, body, engine, carheading, street)
     local mods = json.encode(myCar)
 
     local carcoords = {}
@@ -55,11 +54,11 @@ AddEventHandler('dk-parking:server:saveveh', function(myCar, plate, coords, body
         {finalcoords, mods, engine, body, parked, street, plate})
 end)
 
-RegisterServerEvent('dk-parking:server:update')
-AddEventHandler('dk-parking:server:update', function(hash, plate)
+RegisterServerEvent('parking:server:update')
+AddEventHandler('parking:server:update', function(hash, plate)
     local plate = plate
     local src = source
-    local result = MySQL.Sync.fetchAll('SELECT * FROM player_vehicles WHERE plate = ?', {plate})
+    local result = MySQL.query.await('SELECT * FROM player_vehicles WHERE plate = ?', {plate})
     Wait(500)
     for k, v in pairs(result) do
         info = v
@@ -74,17 +73,17 @@ AddEventHandler('dk-parking:server:update', function(hash, plate)
     local citizenid = info.citizenid
 
     if coords ~= nil then
-        TriggerClientEvent('dk-parking:client:update', src, hash, model, mods, plate, coords, engine, body, citizenid, false)
+        TriggerClientEvent('parking:client:update', src, hash, model, mods, plate, coords, engine, body, citizenid, false)
     else
-        TriggerEvent('dk-parking:server:update', hash, plate)
+        TriggerEvent('parking:server:update', hash, plate)
     end
 end)
 
-RegisterServerEvent('dk-parking:server:unpark')
-AddEventHandler('dk-parking:server:unpark', function(hash, plate)
+RegisterServerEvent('parking:server:unpark')
+AddEventHandler('parking:server:unpark', function(hash, plate)
     local src = source
-    local bodydamage = MySQL.Sync.fetchAll('SELECT body FROM player_vehicles WHERE plate = ?', {plate})
-    local enginedamage = MySQL.Sync.fetchAll('SELECT engine FROM player_vehicles WHERE plate = ?', {plate})
+    local bodydamage = MySQL.query.await('SELECT body FROM player_vehicles WHERE plate = ?', {plate})
+    local enginedamage = MySQL.query.await('SELECT engine FROM player_vehicles WHERE plate = ?', {plate})
 
     for k, v in pairs(bodydamage) do
         bodydamage = v.bodydamage
@@ -95,7 +94,7 @@ AddEventHandler('dk-parking:server:unpark', function(hash, plate)
     local state = 0
 
     MySQL.Async.execute('UPDATE player_vehicles SET state = ?, street = ? WHERE plate = ?', {state, 'Unknown', plate})
-    TriggerClientEvent('dk-parking:client:unpark', src, hash, bodydamage, enginedamage)
+    TriggerClientEvent('parking:client:unpark', src, hash, bodydamage, enginedamage)
 
     for k, v in pairs(parkedVehicles) do
         if v == plate then
@@ -104,14 +103,14 @@ AddEventHandler('dk-parking:server:unpark', function(hash, plate)
     end
 end)
 
-RegisterServerEvent('dk-parking:server:onjoin')
-AddEventHandler('dk-parking:server:onjoin', function(id, cid)
+RegisterServerEvent('parking:server:onjoin')
+AddEventHandler('parking:server:onjoin', function(id, cid)
     local players = getPlayers()
-    local result = exports.oxmysql:executeSync('SELECT * FROM player_vehicles WHERE state = ?', {1})
+    local result = MySQL.query.await('SELECT * FROM player_vehicles WHERE state = ?', {1})
 
     if players <= 1 then
         local src = source
-        TriggerClientEvent('dk-parking:client:onjoin', id, result)
+        TriggerClientEvent('parking:client:onjoin', id, result)
         firstJoin = true
     else
         local plate, owner, model
@@ -121,14 +120,14 @@ AddEventHandler('dk-parking:server:onjoin', function(id, cid)
             owner = v.citizenid
             model = v.vehicle
             if cid == owner then
-                TriggerClientEvent('dk-parking:client:addkeys', id, model, plate, owner)
+                TriggerClientEvent('parking:client:addkeys', id, model, plate, owner)
             end
         end
     end
 end)
 
 QBCore.Functions.CreateCallback('parking:server:isVehicleParked', function(source, cb, vehPlate)
-    local state = MySQL.Sync.fetchScalar('SELECT state FROM player_vehicles WHERE plate = ? LIMIT 1', {vehPlate})
+    local state = MySQL.query.await('SELECT state FROM player_vehicles WHERE plate = ?', {vehPlate})
 
     if state == 1 then
         cb(true)
@@ -137,8 +136,8 @@ end)
 
 AddEventHandler("onResourceStart", function(resourceName)
 	if ("cx-parking" == resourceName) then
-        Citizen.Wait(1000)
-        local result = MySQL.Sync.fetchAll('SELECT * FROM player_vehicles WHERE state = ?', {1})
+        Wait(1000)
+        local result = MySQL.query.await('SELECT * FROM player_vehicles WHERE state = ?', {1})
         for k, v in pairs(result) do
             parkedVehicles[#parkedVehicles + 1] = v.plate
         end
