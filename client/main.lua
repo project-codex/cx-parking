@@ -250,8 +250,11 @@ CreateThread(function()
     while true do
         for k, v in pairs(vehicleEntities) do
             if DoesEntityExist(v) then
-                if GetVehicleWheelSuspensionCompression(v) == 0 then
+                local vehPos = GetEntityCoords(v)
+                local pos = GetEntityCoords(PlayerPedId())
+                if #(vehPos - pos) < 75 then
                     SetVehicleOnGroundProperly(v)
+                    SetEntityCoords(vehPos)
                 end
             end
         end
