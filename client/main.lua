@@ -117,10 +117,10 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     local id = GetPlayerServerId(PlayerId())
     local PlayerData = QBCore.Functions.GetPlayerData()
     citizenid = PlayerData.citizenid
-    TriggerServerEvent('dk-parking:server:onjoin', id, citizenid)
+    TriggerServerEvent('parking:server:onjoin', id, citizenid)
 end)
 
-RegisterNetEvent('dk-parking:client:park', function(state)
+RegisterNetEvent('parking:client:park', function(state)
 
     if Config.UseQbMenu then
         headerDrawn = false
@@ -145,7 +145,7 @@ RegisterNetEvent('dk-parking:client:park', function(state)
     QBCore.Functions.TriggerCallback('qb-garage:server:checkVehicleOwner', function(owned)
         if owned then
             if not state then
-                TriggerServerEvent('dk-parking:server:checkstate', vehPlate)
+                TriggerServerEvent('parking:server:checkstate', vehPlate)
                 isParking = false
                 return
             end
@@ -175,19 +175,19 @@ RegisterNetEvent('dk-parking:client:park', function(state)
         local vehStreet = getStreet(vehCoords)
         TaskLeaveVehicle(ped, pedVeh, 0)
 
-        TriggerServerEvent('dk-parking:server:saveveh', vehMods, vehPlate, vehCoords, vehBody, vehEngine, vehHeading, vehStreet)
+        TriggerServerEvent('parking:server:saveveh', vehMods, vehPlate, vehCoords, vehBody, vehEngine, vehHeading, vehStreet)
         Wait(2500)
-        TriggerServerEvent('dk-parking:server:update', pedVeh, vehPlate)
+        TriggerServerEvent('parking:server:update', pedVeh, vehPlate)
         isParking = false
     end
 
     if state == 1 then
-        TriggerServerEvent('dk-parking:server:unpark', pedVeh, vehPlate)
+        TriggerServerEvent('parking:server:unpark', pedVeh, vehPlate)
         isParking = false
     end
 end)
 
-RegisterNetEvent('dk-parking:client:unpark', function(veh, body, engine)
+RegisterNetEvent('parking:client:unpark', function(veh, body, engine)
     SetEntityCanBeDamaged(veh, false)
     SetEntityInvincible(veh, false)
     FreezeEntityPosition(veh, false)
@@ -199,7 +199,7 @@ RegisterNetEvent('dk-parking:client:unpark', function(veh, body, engine)
     end
 end)
 
-RegisterNetEvent('dk-parking:client:onjoin', function(result)
+RegisterNetEvent('parking:client:onjoin', function(result)
 
     local mods, model, plate, owner, coords, hash, engine, body
 
@@ -212,11 +212,11 @@ RegisterNetEvent('dk-parking:client:onjoin', function(result)
         engine = v.engine
         body = v.body
 
-        TriggerEvent('dk-parking:client:update', nil, model, mods, plate, coords, engine, body, owner, true)
+        TriggerEvent('parking:client:update', nil, model, mods, plate, coords, engine, body, owner, true)
     end
 end)
 
-RegisterNetEvent('dk-parking:client:update', function(hash, model, props, plate, coords, engine, body, vehcid, onspawn)
+RegisterNetEvent('parking:client:update', function(hash, model, props, plate, coords, engine, body, vehcid, onspawn)
 
     local carcoords = json.decode(coords)
     local hashkey = GetHashKey(model)
@@ -235,7 +235,7 @@ RegisterNetEvent('dk-parking:client:update', function(hash, model, props, plate,
     end
 end)
 
-RegisterNetEvent('dk-parking:client:addkeys', function(model, plate, vehcid)
+RegisterNetEvent('parking:client:addkeys', function(model, plate, vehcid)
 
     if citizenid == 0 or citizenid == nil then
         citizenid = QBCore.Functions.GetPlayerData().citizenid
