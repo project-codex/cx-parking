@@ -18,12 +18,10 @@ local function round(number, decimals)
 end
 
 RegisterCommand('park', function(source)
-    local Player = QBCore.Functions.GetPlayer(source)
     TriggerClientEvent('parking:client:park', source)
 end, false)
 
-RegisterServerEvent('parking:server:checkstate')
-AddEventHandler('parking:server:checkstate', function(plate)
+RegisterNetEvent('parking:server:checkstate', function(plate)
     local src = source
     local plate = plate
     local state = MySQL.Sync.fetchScalar('SELECT state FROM player_vehicles WHERE plate = ? LIMIT 1', {plate});
@@ -37,8 +35,7 @@ AddEventHandler('parking:server:checkstate', function(plate)
     TriggerClientEvent('parking:client:park', src, id)
 end)
 
-RegisterServerEvent('parking:server:saveveh')
-AddEventHandler('parking:server:saveveh', function(myCar, plate, coords, body, engine, carheading, street)
+RegisterNetEvent('parking:server:saveveh', function(myCar, plate, coords, body, engine, carheading, street)
     local mods = json.encode(myCar)
 
     local carcoords = {}
@@ -54,8 +51,7 @@ AddEventHandler('parking:server:saveveh', function(myCar, plate, coords, body, e
         {finalcoords, mods, engine, body, parked, street, plate})
 end)
 
-RegisterServerEvent('parking:server:update')
-AddEventHandler('parking:server:update', function(hash, plate)
+RegisterNetEvent('parking:server:update', function(hash, plate)
     local plate = plate
     local src = source
     local result = MySQL.query.await('SELECT * FROM player_vehicles WHERE plate = ?', {plate})
@@ -79,8 +75,7 @@ AddEventHandler('parking:server:update', function(hash, plate)
     end
 end)
 
-RegisterServerEvent('parking:server:unpark')
-AddEventHandler('parking:server:unpark', function(hash, plate)
+RegisterNetEvent('parking:server:unpark', function(hash, plate)
     local src = source
     local bodydamage = MySQL.query.await('SELECT body FROM player_vehicles WHERE plate = ?', {plate})
     local enginedamage = MySQL.query.await('SELECT engine FROM player_vehicles WHERE plate = ?', {plate})
@@ -103,8 +98,7 @@ AddEventHandler('parking:server:unpark', function(hash, plate)
     end
 end)
 
-RegisterServerEvent('parking:server:onjoin')
-AddEventHandler('parking:server:onjoin', function(id, cid)
+RegisterNetEvent('parking:server:onjoin', function(id, cid)
     local players = getPlayers()
     local result = MySQL.query.await('SELECT * FROM player_vehicles WHERE state = ?', {1})
 
