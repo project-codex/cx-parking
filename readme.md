@@ -1,8 +1,6 @@
 <div align="center">
-    <img width="150" height="150" src="https://i.ibb.co/XzZZrBg/pc-logo-modified.png">
+    <img src="https://i.ibb.co/3R3Xtnm/parkingbanner.png">
 </div>
-
-<h1 align="center">cx-parking</h1>
 
 # A better way to park your vehicles.
 
